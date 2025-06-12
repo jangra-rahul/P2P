@@ -95,6 +95,10 @@ a {
   right: 0;
 }
 
+.bg_clr {
+  background-color: #221933 !important;
+}
+
 @media (max-width: 768px) {
   .box {
     padding: 20px;

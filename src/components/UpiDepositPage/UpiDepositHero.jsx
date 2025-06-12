@@ -228,11 +228,21 @@ import gallery from "../../../public/GalleryIcon.svg";
 import photo from "../../../public/photoIcon.svg";
 import { toast, ToastContainer } from "react-toastify";
 import Link from "next/link";
+import backBg from "../../../public/backbg.jpg";
+import editIcon from "../../../public/editIcon.svg";
 
 const UpiDepositHero = () => {
   const email = "xyz@ok.axics";
   const [showModal, setShowModal] = useState(false);
-
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
   const copyToClipboard = () => {
     navigator.clipboard.writeText(email);
     toast.success("Copied to clipboard!", {
@@ -252,7 +262,15 @@ const UpiDepositHero = () => {
       }}
       className="min-vh-100 d-flex flex-column"
     >
-      <div className="w-100" style={{ backgroundColor: "#221933" }}>
+      <div
+        className="w-100"
+        style={{
+          backgroundImage: `url(${backBg.src})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <div className="container py-4">
           <Link href="/" className="text-decoration-none text-white">
             <p className="text-white fs_19 fw-semibold mb-0">
@@ -269,8 +287,8 @@ const UpiDepositHero = () => {
               <Row className="p-0">
                 <Col className="p-lg-0" xs={12} md={12} lg={6}>
                   <div
-                    style={{ backgroundColor: "#221933 !important" }}
-                    className="card h-100 rounded-4 p-lg-5 p-3"
+                    // style={{ backgroundColor: "#221933 !important" }}
+                    className="card h-100 bg_clr rounded-4 p-lg-5 p-3"
                   >
                     <h5 className="text-white fw-bold mb-0 fs_19">Scan QR</h5>
                     <Image
@@ -314,9 +332,23 @@ const UpiDepositHero = () => {
                         Upload Payment Slip
                       </h6>
                       <div
-                        className="d-flex border border-1 mt-1 rounded-2 overflow-hidden w-100"
+                        className="d-flex border border-1 align-items-center mt-1 rounded-2 overflow-hidden w-100"
                         style={{ maxWidth: "100%" }}
                       >
+                        {previewUrl && (
+                          <div className="mt-1 ps-2 pb-1">
+                            <Image
+                              src={previewUrl}
+                              alt="Preview"
+                              width={30}
+                              height={30}
+                              style={{
+                                borderRadius: "10px",
+                              }}
+                            />
+                          </div>
+                        )}
+
                         <div
                           className="flex-grow-1 d-flex align-items-center px-3"
                           style={{
@@ -326,31 +358,49 @@ const UpiDepositHero = () => {
                             color: "#6B7280",
                           }}
                         >
-                          Click to browse to upload slip image
+                          {selectedFile
+                            ? selectedFile.name
+                            : "Click to browse to upload slip image"}
                         </div>
                         <label className="m-0 p-1">
                           <input
                             type="file"
-                            accept=".jpg,.jpeg,.png,.svg"
+                            accept="image/*"
                             hidden
-                            onChange={(e) => {
-                              console.log("Uploaded file: ", e.target.files[0]);
-                            }}
+                            id="galleryInput"
+                            onChange={handleFileChange}
                           />
+                          {previewUrl ? (
+                            <>
+                              {" "}
+                              <Image
+                                src={editIcon}
+                                alt="Logo"
+                                width={30}
+                                height={30}
+                              />
+                            </>
+                          ) : (
+                            <div
+                              className="h-100 py-2 fw-bold d-md-flex d-none text-white rounded-3  align-items-center px-4"
+                              style={{
+                                backgroundColor: "#6140A3",
+                                color: "white",
+                                cursor: "pointer",
+                                fontWeight: 500,
+                                fontSize: "14px",
+                              }}
+                            >
+                              Browse
+                            </div>
+                          )}
+                        </label>
+
+                        {previewUrl ? (
+                          <></>
+                        ) : (
                           <div
-                            className="h-100  fw-bold d-md-flex d-none text-white rounded-3  align-items-center px-4"
-                            style={{
-                              backgroundColor: "#6140A3",
-                              color: "white",
-                              cursor: "pointer",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                            }}
-                          >
-                            Browse
-                          </div>
-                          <div
-                            className="h-100 fw-bold d-flex d-md-none text-white rounded-3  align-items-center px-4"
+                            className="h-100 fw-bold py-2 mt-1 me-1 d-flex d-md-none text-white rounded-3  align-items-center px-4"
                             style={{
                               backgroundColor: "#6140A3",
                               color: "white",
@@ -362,7 +412,7 @@ const UpiDepositHero = () => {
                           >
                             Browse
                           </div>
-                        </label>
+                        )}
                       </div>
                       <small className="color_gray fs_15 d-block mb-3 mt-1">
                         Image must be JPG, PNG, or SVG and under 250KB.
