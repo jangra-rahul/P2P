@@ -25,6 +25,7 @@ const PaymentProcesseHero = () => {
               width={430}
               className="customW"
               height={330}
+              alt="Processing Icon"
             />
             <h5 className=" fs_36 fw-bold mt-3" style={{ color: "#6140A3" }}>
               {" "}
